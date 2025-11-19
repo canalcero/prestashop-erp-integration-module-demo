@@ -27,6 +27,13 @@ class AdminErpBaseModuleController extends ModuleAdminController
                         'validation' => 'isGenericName',
                         'required' => true,
                     ],
+                    'ERP_CRON_SECURE_TOKEN' => [
+                        'title' => $this->l('CRON Secure Token'),
+                        'type' => 'text',
+                        'validation' => 'isGenericName',
+                        'required' => true,
+                        'desc' => $this->l('A secure token to protect your CRON endpoint.'),
+                    ],
                 ],
                 'submit' => [
                     'title' => $this->l('Save'),

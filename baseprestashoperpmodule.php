@@ -4,6 +4,10 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once __DIR__ . '/vendor/autoload.php';
+
+use MyErpModule\Service\ErpApiClient;
+
 class BasePrestashopErpModule extends Module
 {
     public function __construct()
@@ -62,9 +66,35 @@ class BasePrestashopErpModule extends Module
      */
     public function hookActionValidateOrder($params)
     {
-        // $order = $params['order'];
-        // $customer = $params['customer'];
-        // Implement your logic here to send order to the ERP.
+        try {
+            PrestaShopLogger::addLog('ERP Sync: New order detected.', 1);
+
+            $apiUrl = Configuration::get('ERP_API_URL');
+            $apiKey = Configuration::get('ERP_API_KEY');
+
+            if (empty($apiUrl) || empty($apiKey)) {
+                PrestaShopLogger::addLog('ERP Sync: API URL or Key not configured.', 3);
+                return;
+            }
+
+            $order = $params['order'];
+            $orderData = [
+                'id' => $order->id,
+                'reference' => $order->reference,
+                'total_paid' => $order->total_paid_tax_incl,
+                'customer_email' => $params['customer']->email,
+            ];
+
+            $apiClient = new ErpApiClient($apiUrl, $apiKey);
+            
+            if ($apiClient->sendOrder($orderData)) {
+                PrestaShopLogger::addLog('ERP Sync: Order ' . $order->reference . ' sent successfully.', 1);
+            } else {
+                PrestaShopLogger::addLog('ERP Sync: Failed to send order ' . $order->reference . '.', 3);
+            }
+        } catch (Exception $e) {
+            PrestaShopLogger::addLog('ERP Sync: An error occurred: ' . $e->getMessage(), 3);
+        }
     }
 
     /**
