@@ -1,6 +1,6 @@
 <?php
 
-class baseprestashoperpmoduleronModuleFrontController extends ModuleFrontController
+class BaseprestashoperpmoduleCronModuleFrontController extends ModuleFrontController
 {
     public function initContent()
     {
