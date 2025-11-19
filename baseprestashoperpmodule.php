@@ -29,25 +29,31 @@ class BasePrestashopErpModule extends Module
 
     public function install()
     {
-        if (
-            !parent::install() ||
-            !$this->registerHook('actionValidateOrder') ||
-            !$this->registerHook('actionOrderStatusUpdate') ||
-            !$this->registerHook('actionUpdateQuantity')
-        ) {
-            return false;
-        }
-        return true;
+        include(dirname(__FILE__).'/sql/install.php');
+
+        return parent::install() &&
+            $this->registerHook('actionValidateOrder') &&
+            $this->registerHook('actionOrderStatusUpdate') &&
+            $this->registerHook('actionUpdateQuantity');
     }
 
     public function uninstall()
     {
-        if (!parent::uninstall()) {
-            return false;
-        }
-        return true;
+        include(dirname(__FILE__).'/sql/uninstall.php');
+
+        return parent::uninstall();
     }
 
+    /**
+     * Entry point for the module configuration page.
+     */
+    public function getContent()
+    {
+        Tools::redirectAdmin(
+            $this->context->link->getAdminLink('AdminErpBaseModule')
+        );
+    }
+    
     // HOOKS
 
     /**
