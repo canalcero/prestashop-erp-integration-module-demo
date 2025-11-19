@@ -1,0 +1,24 @@
+{
+    "name": "your-vendor/base-prestashop-erp-module",
+    "description": "A base module to integrate PrestaShop with an external ERP.",
+    "type": "prestashop-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "your.email@example.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "MyErpModule\\": "src/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "prepend-autoloader": false
+    },
+    "require": {
+        "php": ">=7.1.0"
+    }
+}

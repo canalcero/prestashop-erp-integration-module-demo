@@ -1,0 +1,86 @@
+<?php
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+class BasePrestashopErpModule extends Module
+{
+    public function __construct()
+    {
+        $this->name = 'baseprestashoperpmodule';
+        $this->tab = 'administration';
+        $this->version = '1.0.0';
+        $this->author = 'Your Name';
+        $this->need_instance = 0;
+        $this->ps_versions_compliancy = [
+            'min' => '1.7',
+            'max' => _PS_VERSION_
+        ];
+        $this->bootstrap = true;
+
+        parent::__construct();
+
+        $this->displayName = $this->l('ERP Integration Base Module');
+        $this->description = $this->l('A base module to integrate PrestaShop with an external ERP.');
+
+        $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
+    }
+
+    public function install()
+    {
+        if (
+            !parent::install() ||
+            !$this->registerHook('actionValidateOrder') ||
+            !$this->registerHook('actionOrderStatusUpdate') ||
+            !$this->registerHook('actionUpdateQuantity')
+        ) {
+            return false;
+        }
+        return true;
+    }
+
+    public function uninstall()
+    {
+        if (!parent::uninstall()) {
+            return false;
+        }
+        return true;
+    }
+
+    // HOOKS
+
+    /**
+     * Hook for order creation.
+     * Use this hook to send new order data to the ERP.
+     */
+    public function hookActionValidateOrder($params)
+    {
+        // $order = $params['order'];
+        // $customer = $params['customer'];
+        // Implement your logic here to send order to the ERP.
+    }
+
+    /**
+     * Hook for order status updates.
+     * Use this to notify the ERP of changes (e.g., shipped, canceled).
+     */
+    public function hookActionOrderStatusUpdate($params)
+    {
+        // $newOrderStatus = $params['newOrderStatus'];
+        // $id_order = (int)$params['id_order'];
+        // Implement your logic here.
+    }
+
+    /**
+     * Hook for quantity updates.
+     * Use this to sync stock changes from PrestaShop back to the ERP.
+     */
+    public function hookActionUpdateQuantity($params)
+    {
+        // $id_product = (int)$params['id_product'];
+        // $id_product_attribute = (int)$params['id_product_attribute'];
+        // $quantity = (int)$params['quantity'];
+        // Implement your logic here.
+    }
+}
